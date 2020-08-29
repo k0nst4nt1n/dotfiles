@@ -1,14 +1,15 @@
 #!/bin/sh
 
-go_fmt() {
+go_fmt_build() {
     hash gofmt || exit 1
     IFS='
 '
     for file in `git diff --cached --name-only --diff-filter=ACM | grep '\.go$'`
     do
         gofmt -w -s "$file" || exit 1
+        go build "$file"    || exit 1
         git add "$file"     || exit 1
     done
 }
 
-go_fmt
+go_fmt_build
